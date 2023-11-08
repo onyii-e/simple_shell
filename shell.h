@@ -162,7 +162,7 @@ int builtin_alias(data_of_program *data);
 int builtin_env(data_of_program *data);
 
 /*create or override a variable of environment */
-int builtin_set_env(data_of_program);
+int builtin_set_env(data_of_program *data);
 
 /* delete a variable of environment */
 int builtin_unset_env(data_of_program *data);
