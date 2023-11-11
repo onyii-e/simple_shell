@@ -87,6 +87,7 @@ ssize_t get_exec_command(void)
 		}
 		/*Copy the token into argv[i]*/
 		strcpy(argv[i], token);
+		token = strtok(NULL, delim);
 	}
 	/*NULL-terminate the argv*/
 	argv[i] = NULL;
