@@ -29,7 +29,7 @@ char *pathfinder(char *filename)
 		{
 			/*write the full path inside a string */
 			/*we can use it like a buffer too and use write*/
-			absolute_path = (char*)malloc(sizeof(token) + sizeof(filename) + 2);
+			absolute_path = (char *)malloc(sizeof(token) + sizeof(filename) + 2);
 			if (absolute_path == NULL)
 			{
 				perror("Error");

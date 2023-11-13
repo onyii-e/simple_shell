@@ -4,7 +4,7 @@
 /**
   * main - The shell entry.
   *
-  * Return - Always 0.
+  * Return: Always 0.
   */
 int main(void)
 {
@@ -46,70 +46,37 @@ ssize_t get_exec_command(void)
 	int i, val, response, num_token = 0;
 	size_t n = 0;
 
-	/*Now lets get the user input from the command line*/
-	val = getline(&mesg, &n, stdin);
+	val = getline(&mesg, &n, stdin); /*Get user input*/
 	if (val == -1)
 	{
-		/* Can't read mesg either no input or an error.*/
 		if (feof(stdin))
-		{
-		/*If end of file in stdin i.e. no args*/
-			write(STDOUT_FILENO, "\n", 1);
-			exit(EXIT_SUCCESS);
-		}
+			write(STDOUT_FILENO, "\n", 1), exit(EXIT_SUCCESS);
 		else
-		{
-		/* If can't read due to error in getline*/
-			perror("getline");
-			exit(EXIT_FAILURE);
-		}
+			perror("getline"), exit(EXIT_FAILURE);
 	}
-
-	/*Now replace '\n' from the user input with '\0'*/
 	mesg_copy = strdup(mesg); /* FREE ME LATER !!! */
 	if (mesg_copy == NULL)
-	{
-		perror("Can't duplicate command line message");
-		exit(EXIT_FAILURE);
-	}
+		perror("strdup"), exit(EXIT_FAILURE);
 	mesg_copy[strcspn(mesg_copy, "\n")] = '\0';
-
-	/*Find the number of command in the message*/
 	token = strtok(mesg_copy, delim);
 	while (token)
-	{
-		num_token++;
-		token = strtok(NULL, delim);
-	}
+		num_token++, token = strtok(NULL, delim);
 	num_token++; /* Cater for terminating NULL*/
-	/*mesg_copy = strdup(mesg);  renew mesg, after first tokenization*/
-
-	/* Allocate memory to hold num_token amount of strings */
 	argv = malloc(sizeof(char *) * num_token);
 	if (argv == NULL)
 	{
-		perror("Error in argv: Can't allocate space for message");
-		exit(EXIT_FAILURE);
+		perror("malloc"), exit(EXIT_FAILURE);
 	}
-	/* Write each token into the argv */
-	token = strtok(mesg_copy, delim);
+	token = strtok(mesg_copy, delim); /*Write each token into argv*/
 	for (i = 0; token; i++)
 	{
 		argv[i] = strdup(token);
 		token = strtok(NULL, delim);
 	}
-	argv[i] = NULL; /* NULL-terminate the argv*/
-
-	/* Now execute the argv */
-	response = execute_command(argv);
-
-	/* Avoid memory leaks*/
+	argv[i] = NULL, response = execute_command(argv); /* Execute argv*/
 	for (i = 0; i < num_token; i++)
 		free(argv[i]);
-	free(argv);
-	free(mesg);
-	free(mesg_copy);
-
+	free(argv), free(mesg), free(mesg_copy);
 	return (response);
 }
 
