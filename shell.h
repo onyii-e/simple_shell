@@ -6,6 +6,12 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/types.h>
+#include <signal.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <stddef.h>
+#include <errno.h>
 
 extern char **environ;
 void entrance(void);
