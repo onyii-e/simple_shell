@@ -19,6 +19,8 @@ int main(void)
 		{
 			return (0);
 		}
+		if (response == 90)
+			continue;
 	}
 
 	return (0);
@@ -56,6 +58,8 @@ ssize_t get_exec_command(void)
 	if (mesg_copy == NULL)
 		perror("strdup"), exit(EXIT_FAILURE);
 	mesg_copy[strcspn(mesg_copy, "\n")] = '\0';
+	if (*mesg_copy == '\0')
+		return (90);
 	token = strtok(mesg_copy, delim);
 	while (token)
 		num_token++, token = strtok(NULL, delim);
