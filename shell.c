@@ -50,7 +50,7 @@ ssize_t get_exec_command(void)
 	if (val == -1)
 	{
 		if (feof(stdin))
-			write(STDOUT_FILENO, "\n", 1);
+			write(STDOUT_FILENO, "\n", 1), exit(EXIT_SUCCESS);
 		else
 			perror("getline"), exit(EXIT_FAILURE);
 	}
