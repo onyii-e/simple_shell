@@ -9,20 +9,25 @@
 int main(void)
 {
 	ssize_t response;
-	char *exit_message = "(: Leaving so soon?\n(: See you next time...\n";
 
-	while (5)
+	if (isatty(STDIN_FILENO))
 	{
-		entrance();
-		response = get_exec_command();
-		/* If user types exit or EXIT break the loop*/
-		if (response == 99)
+		while (5)
 		{
-			write(STDOUT_FILENO, exit_message, strlen(exit_message));
-			return (0);
+			entrance();
+			response = get_exec_command();
+			/* If user types exit or EXIT break the loop*/
+			if (response == 99)
+			{
+				exit (EXIT_SUCCESS);
+			}	
 		}
 	}
-
+	response = get_exec_command();
+	if (response == 99)
+	{
+		exit(EXIT_SUCCESS);
+	}
 	return (0);
 }
 
