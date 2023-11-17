@@ -21,12 +21,17 @@ int main(void)
 			{
 				exit (EXIT_SUCCESS);
 			}	
+			if (response == 90)
+				continue;
 		}
 	}
-	response = get_exec_command();
-	if (response == 99)
+	else
 	{
-		exit(EXIT_SUCCESS);
+		response = get_exec_command();
+		if (response == 99)
+		{
+			exit(EXIT_SUCCESS);
+		}
 	}
 	return (0);
 }
@@ -63,19 +68,20 @@ ssize_t get_exec_command(void)
 	if (mesg_copy == NULL)
 		perror("strdup"), exit(EXIT_FAILURE);
 	mesg_copy[strcspn(mesg_copy, "\n")] = '\0';
+	if (*mesg_copy == '\0')
+		return (90);
 	token = strtok(mesg_copy, delim);
 	while (token)
 		num_token++, token = strtok(NULL, delim);
-	num_token++; /* Cater for terminating NULL*/
-	argv = malloc(sizeof(char *) * num_token);
+	argv = malloc(sizeof(char *) * (num_token + 1)); /*Null terminate*/
 	if (argv == NULL)
-	{
 		perror("malloc"), exit(EXIT_FAILURE);
-	}
 	token = strtok(mesg_copy, delim); /*Write each token into argv*/
 	for (i = 0; token; i++)
 	{
 		argv[i] = strdup(token);
+		if (argv[i] == NULL)
+			break;
 		token = strtok(NULL, delim);
 	}
 	argv[i] = NULL, response = execute_command(argv); /* Execute argv*/
@@ -100,6 +106,10 @@ int execute_command(char **command)
 	/* If user type exit or EXIT return 99*/
 	if ((strcmp(command[0], "exit") == 0) || (strcmp(command[0], "EXIT") == 0))
 		return (99);
+
+	if (*command == NULL)
+		write(STDOUT_FILENO, "\n", 1);
+
 	val = fork();
 	if (val == -1)
 	{
